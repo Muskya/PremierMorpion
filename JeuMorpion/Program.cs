@@ -21,8 +21,8 @@ namespace JeuMorpion
             grid[1] = new char[columns] { '-', '-', '-' };
             grid[2] = new char[columns] { '-', '-', '-' };
 
-            Console.WriteLine("-- Welcome to the Tic-Tac-Toe --\n    ");
-            Console.WriteLine("The grid is a 3x3:\n");
+            Console.WriteLine("-- Bienvenue dans le morpion de Muska ! --\n    ");
+            Console.WriteLine("La grille est composee de 3 lignes et 3 colonnes:\n");
 
             //Game loop
             do
