@@ -21,8 +21,10 @@ namespace JeuMorpion
             grid[1] = new char[columns] { '-', '-', '-' };
             grid[2] = new char[columns] { '-', '-', '-' };
 
-            Console.WriteLine("-- Bienvenue dans le morpion de Muska ! --\n    ");
-            Console.WriteLine("La grille est composee de 3 lignes et 3 colonnes:\n");
+            Console.WriteLine("-- Bienvenue dans le morpion de Muska ! --    ");
+            Console.WriteLine("La grille sera composee de 3 lignes et 3 colonnes:\n");
+     
+            Console.WriteLine("-Choisissez la position de votre \'o\'-");
 
             //Game loop
             do
@@ -39,12 +41,11 @@ namespace JeuMorpion
         {
             public void dispGrid(char[][] grid)
             {
-                for (int i = 0; i < grid.Length; i++)
-                {
+                for (int i = 0; i < grid.Length; i++) {
+
                     //System.Console.Write("Element({0}): ", i);
 
-                    for (int j = 0; j < grid[i].Length; j++)
-                    {
+                    for (int j = 0; j < grid[i].Length; j++) {
                         System.Console.Write("{0}{1}", grid[i][j], j == (grid[i].Length - 1) ? "" : " ");
                     }
                     System.Console.WriteLine();
@@ -53,41 +54,77 @@ namespace JeuMorpion
                 Console.WriteLine();
             }
 
+            //Tour du joueur
             public void playerPlays(char[][] grid, int x, int y)
             {
+                //Entrée utilisateur en string, convertie en int
                 string answer = "";
+                bool ticPlaced = false;
 
-                Console.WriteLine("-Choose your \'o\' position-");
+                do
+                {
+                    //Choix de la ligne
+                    do
+                    {
+                        Console.WriteLine("Ligne ?");
+                        answer = Console.ReadLine();
+                        Int32.TryParse(answer, out x); //Conversion du numéro de la ligne en int pour les conditions
+                    } while (x < 1 || x > 3); //Répète tant que la ligne est inexistante
 
-                do {
-                    Console.WriteLine("Which line ?");
-                    answer = Console.ReadLine();
-                    Int32.TryParse(answer, out x);
-                } while (x < 1 || x > 3);
+                    //Choix de la colonne
+                    do
+                    {
+                        Console.WriteLine("Colonne ?");
+                        answer = Console.ReadLine();
+                        Int32.TryParse(answer, out y); //Conversion du numéro de la ligne en int pour les conditions
+                    } while (y < 1 || y > 3); //Répète tant que la ligne est inexistante
 
-                do {
-                    Console.WriteLine("Which column ?");
-                    answer = Console.ReadLine();
-                    Int32.TryParse(answer, out y);
-                } while (y < 1 || y > 3);
+                    if (noSpace(grid, x - 1, y - 1))
+                    {
+                        Console.WriteLine("Pas de place sur cette case.");
+                        ticPlaced = false;
+                    }
+                    else
+                    {
+                        ticPlaced = true;
+                        grid[x - 1][y - 1] = 'o'; //Remplissage de la case
+                    }
 
-                grid[x - 1][y - 1] = 'o';
+                } while (!ticPlaced);
 
                 Console.WriteLine();
             }
 
+            //Fonction de vérification de l'espace - True: plus de place | False: place disponible
+            public bool noSpace(char[][] grid, int x, int y)
+            {
+                bool noSpace = false; //Booléen de retour
+
+                //Si la case donnée en paramètre est déjà remplie (par x ou o)
+                if (grid[x][y] == 'o' || grid[x][y] == 'x') {
+                    noSpace = true; //Retourne qu'il n'y a plus de place (actions en conséquence...)
+                } else { noSpace = false; } 
+
+                return noSpace;
+            }
+
+            
+
+            //Tour du robot. (AI)
             public void robotPlays(char[][] grid)
             {
                 Random random = new Random();
-                int row = 0, column = 0;
-                bool crossPlaced = false;
+                int row = 0, column = 0; //Pour le placement de la croix du robot
+                bool crossPlaced = false; 
 
                 do
                 {
+                    //Génère des aléatoires entre 0 et 3 (lignes/colonnes)
                     row = random.Next(0, 3);
                     column = random.Next(0, 3);
 
-                    if(Filled(grid, row, column, 'x') == true)
+
+                    if(FillRobot(grid, row, column, 'x') == true)
                     {
                         crossPlaced = true;
                     }
@@ -95,17 +132,18 @@ namespace JeuMorpion
                 } while (crossPlaced == false);
             }
 
-            public bool Filled(char[][] grid, int row, int column, char ticcross)
+            public bool FillRobot(char[][] grid, int row, int column, char tictoe) //Tictoe utilisé pour remplir la case
             {
                 bool filled = false;
                 if (grid[row][column] == 'x' || grid[row][column] == 'o')
                 {
-                    Console.WriteLine("There already is an element here.");
+                    //Console.WriteLine("There already is an element here.");
                     filled = false;
-                } else
+                }
+                else
                 {
-                    grid[row][column] = ticcross;
-                    Console.WriteLine("Case filled");
+                    grid[row][column] = tictoe;
+                    //Console.WriteLine("Case filled");
                     filled = true;
                 }
 
