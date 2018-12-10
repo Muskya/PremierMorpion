@@ -32,9 +32,17 @@ namespace JeuMorpion
                 game.dispGrid(grid);
 
                 game.playerPlays(grid, x, y);
+                if (game.playerWin(grid))
+                    finish = true;
+
                 game.robotPlays(grid);
+                if (game.robotWin(grid))
+                    finish = true;
 
             } while (!finish);
+
+            game.dispGrid(grid);
+            Console.WriteLine("Merci d'avoir joue.");
         }
 
         class Game
@@ -108,7 +116,55 @@ namespace JeuMorpion
                 return noSpace;
             }
 
-            
+            public bool playerWin(char[][] grid)
+            {
+                bool playerWin = false;
+
+                if (   (grid[0][0] == 'o' && grid[0][1] == 'o' && grid[0][2] == 'o')//Ligne 0
+                    || (grid[1][0] == 'o' && grid[1][1] == 'o' && grid[1][2] == 'o')//Ligne 1
+                    || (grid[2][0] == 'o' && grid[2][1] == 'o' && grid[2][2] == 'o')//Ligne 2
+
+                    || (grid[0][0] == 'o' && grid[1][1] == 'o' && grid[2][2] == 'o')//Diagonale 0,0
+                    || (grid[2][0] == 'o' && grid[1][1] == 'o' && grid[0][2] == 'o')//Diagonale 2,0
+
+                    || (grid[0][0] == 'o' && grid[1][0] == 'o' && grid[2][0] == 'o')//Colonne 0
+                    || (grid[0][1] == 'o' && grid[1][1] == 'o' && grid[2][1] == 'o')//Colonne 1
+                    || (grid[0][2] == 'o' && grid[1][2] == 'o' && grid[2][2] == 'o')   ) //Colonne 2
+                {
+                    Console.WriteLine("Vous avez gagne !");
+                    playerWin = true;
+                } else
+                {
+                    playerWin = false;
+                }
+
+                return playerWin;
+            }
+            public bool robotWin(char[][] grid)
+            {
+                bool robotWin = false;
+
+                if ((grid[0][0] == 'x' && grid[0][1] == 'x' && grid[0][2] == 'x')//Ligne 0
+                    || (grid[1][0] == 'x' && grid[1][1] == 'x' && grid[1][2] == 'x')//Ligne 1
+                    || (grid[2][0] == 'x' && grid[2][1] == 'x' && grid[2][2] == 'x')//Ligne 2
+
+                    || (grid[0][0] == 'x' && grid[1][1] == 'x' && grid[2][2] == 'x')//Diagonale 0,0
+                    || (grid[2][0] == 'x' && grid[1][1] == 'x' && grid[0][2] == 'x')//Diagonale 2,0
+
+                    || (grid[0][0] == 'x' && grid[1][0] == 'x' && grid[2][0] == 'x')
+                    || (grid[0][1] == 'x' && grid[1][1] == 'x' && grid[2][1] == 'x')
+                    || (grid[0][2] == 'x' && grid[1][2] == 'x' && grid[2][2] == 'x'))
+                {
+                    Console.WriteLine("Vous avez perdu !");
+                    robotWin = true;
+                }
+                else
+                {
+                    robotWin = false;
+                }
+
+                return robotWin;
+            }
 
             //Tour du robot. (AI)
             public void robotPlays(char[][] grid)
